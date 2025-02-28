@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fetch practise</title>
+  </head>
+  <body>
+    <h1>Fetch Exercise</h1>
+    <button id="usersLink">Show Users</button>
+    <button id="postsLink">Show Posts</button>
+    <div id="output"></div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const usersBtn = document.getElementById("usersLink");
+        const postsBtn = document.getElementById("postsLink");
+
+        usersBtn.addEventListener("click", () =>
+          fetchAndShow("https://jsonplaceholder.typicode.com/users", showUsers)
+        );
+        postsBtn.addEventListener("click", () =>
+          fetchAndShow("https://jsonplaceholder.typicode.com/posts", showPosts)
+        );
+      });
+
+      async function fetchAndShow(url, callback) {
+        try {
+          let response = await fetch(url);
+          if (!response.ok) {
+            throw new Error(`Failed to load data: ${response.status}`);
+          }
+          let data = await response.json();
+          callback(data);
+        } catch (error) {
+          console.error("Fetching error:", error);
+        }
+      }
+
+      function showUsers(users) {
+        let tableHTML = `<table border='1'><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th></tr>`;
+        users.forEach((user) => {
+          tableHTML += `<tr><td>${user.id}</td><td>${user.name}</td><td>${user.email}</td><td>${user.phone}</td></tr>`;
+        });
+        tableHTML += "</table>";
+        document.getElementById("output").innerHTML = tableHTML;
+      }
+
+      function showPosts(posts) {
+        let tableHTML = `<table border='1'><tr><th>ID</th><th>Title</th><th>Body</th></tr>`;
+        posts.forEach((post) => {
+          tableHTML += `<tr><td>${post.id}</td><td>${post.title}</td><td>${post.body}</td></tr>`;
+        });
+        tableHTML += "</table>";
+        document.getElementById("output").innerHTML = tableHTML;
+      }
+    </script>
+  </body>
+</html>
